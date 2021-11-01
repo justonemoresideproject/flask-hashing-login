@@ -64,3 +64,26 @@ class User(db.Model):
             return u
         else:
             return False
+
+# Create a Feedback model for SQLAlchemy. Put this in a models.py file.
+
+# It should have the following columns:
+
+# id - a unique primary key that is an auto incrementing integer
+# title - a not-nullable column that is at most 100 characters
+# content - a not-nullable column that is text
+# username - a foreign key that references the username column in the users table
+
+class Feedback(db.Model):
+
+    __tablename__ = 'feedback'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+
+    title = db.Column(db.String(100), nullable=False)
+
+    content = db.Column(db.Text, nullable=False)
+
+    username = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+    user = db.relationship('User', backref='feedback')

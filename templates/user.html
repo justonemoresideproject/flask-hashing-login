@@ -1,0 +1,121 @@
+{% extends 'base.html' %} 
+
+{% block title %} User {% endblock %} 
+
+{% block content %}
+
+<div class="col-md-6">
+    <strong style='font-size: 20px;'>Information</strong>
+    <span>
+        <form action="/users/<user_id>/update" style='display:inline;'><button class="btn btn-small btn-success"><i class="far fa-edit"></i></button></form>
+            
+        <form action="/users/<user_id>/delete" style='display:inline;'><button class="btn btn-small btn-danger"><i class="fas fa-trash-alt"></i></button></form>
+    </span>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-user-information">
+            <tbody>
+                <tr>        
+                    <td>
+                        <strong>
+                            <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                            Username                                                
+                        </strong>
+                    </td>
+                    <td class="text-primary">
+                        Username here {{user.username}}     
+                    </td>
+                </tr>
+                <tr>    
+                    <td>
+                        <strong>
+                            <span class="glyphicon glyphicon-user  text-primary"></span>    
+                            Email                                                
+                        </strong>
+                    </td>
+                    <td class="text-primary">
+                        User email here {{user.email}}     
+                    </td>
+                </tr>
+                <tr>        
+                    <td>
+                        <strong>
+                            <span class="glyphicon glyphicon-cloud text-primary"></span>  
+                            First Name                                                
+                        </strong>
+                    </td>
+                    <td class="text-primary">
+                        First Name Here {{user.first_name}}  
+                    </td>
+                </tr>
+
+                <tr>        
+                    <td>
+                        <strong>
+                            <span class="glyphicon glyphicon-bookmark text-primary"></span> 
+                            Last Name                                                
+                        </strong>
+                    </td>
+                    <td class="text-primary">
+                        Last Name Here {{user.last_name}} 
+                    </td>
+                </tr>                              
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- {% for feedback in user.feedback %}
+
+<div>
+    <div class="card my-4">
+        <div class="card-body">
+            <h5 class="card-title text-info">
+                {{feedback.title}}
+            </h5>
+            <form action="/feedback/{{feedback.id}}/update"><button><i class="fas fa-edit"></i></button></form>
+            <h6 class="card-subtitle mb-2 text-muted">
+                {{feedback.username}}
+            </h6>
+            <h6 class="card-text">
+                {{feedback.content}}
+            </h6>
+        </div>
+    </div>
+</div>
+
+{% endfor %} -->
+
+<table>
+    <tr>
+        <strong style='font-size: 20px; padding-left:15px; margin-right:10px;'>Feedback</strong>
+        <form action="/users/<username>/feedback/add">
+            <button class="btn btn-info"><i class="far fa-plus-square"></i></button>
+        </form>
+    </tr>
+    <tr>
+
+        <div>
+            <div class="card my-4">
+                <div class="card-body">
+                    <h5 class="card-title text-info">
+                        Title
+                    </h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        username
+                    </h6>
+                    <span class="card-text">
+                        Content
+                    </span>
+                    <span>
+                        <form action="/feedback/<feedback_id>/update" style='display:inline;'><button class="btn btn-small btn-success"><i class="far fa-edit"></i></button></form>
+                        
+                        <form action="/feedback/<feedback_id>/delete" style='display:inline;'><button class="btn btn-small btn-danger"><i class="fas fa-trash-alt"></i></button></form>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </tr>
+</table>
+
+{% endblock %}
