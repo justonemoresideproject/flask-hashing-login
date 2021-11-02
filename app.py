@@ -2,8 +2,10 @@ from flask import Flask, render_template, redirect, session, flash
 from flask_debugtoolbar import DebugToolbarExtension
 from models import connect_db, db, User
 from forms import RegisterForm, LoginForm, FeedbackForm
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///flask_hashing_login"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = True
@@ -44,21 +46,19 @@ def redirect_to_reg():
 def register():
     form = RegisterForm()
 
-    if session['user_id']:
+    if 'user_id' in session:
         user = User.query.get_or_404(session['user_id'])
         redirect(f'/users/{user.username}')
 
     if form.validate_on_submit():
         username = form.username.data,
         password = form.password.data,
+        first_name = form.first_name.data,
+        last_name = form.last_name.data,
+        email = form.email.data
 
-        newUser = User.register(username, password)
+        user = User.register(username, password, first_name, last_name, email)
 
-        newUser.email = form.email.data,
-        newUser.first_name = form.first_name.data,
-        newUser.last_name = form.last_name.data
-
-        db.session.add(newUser)
         db.session.commit()
 
         return redirect('/secret')
@@ -69,7 +69,7 @@ def register():
 def login():
     form = LoginForm()
 
-    if session['user_id']:
+    if 'user_id' in session:
         user = User.query.get_or_404(session['user_id'])
         redirect(f'/users/{user.username}')
 
@@ -83,7 +83,6 @@ def login():
         if user:
             session["user_id"] = user.id
             return redirect("/secret")
-
         else:
             form.username.errors = ["Bad name/password"]
 
@@ -98,18 +97,19 @@ def login():
         
 @app.route('/secret')
 def secret():
-    if "user_id" not in session:
-        flash('You do not have permission to that resource')
-        return render_template('login.html')
-    # return render_template('secrets.html')
-    username = form.username.data
-    return redirect(f'/users/{username}')
-
-@app.route('/users/<username>')
-def get_user(username):
     # if "user_id" not in session:
     #     flash('You do not have permission to that resource')
     #     return render_template('login.html')
+    return 'you made it'
+    # return render_template('secrets.html')
+    # username = form.username.data
+    # return redirect(f'/users/{username}')
+
+@app.route('/users/<username>')
+def get_user(username):
+    if "user_id" not in session:
+        flash('You do not have permission to that resource')
+        return redirect('/login')
     user = User.query.filter_by(username=f'{username}').first()
 
     return render_template('user.html', user=user)

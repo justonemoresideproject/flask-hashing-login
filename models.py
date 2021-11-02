@@ -36,8 +36,9 @@ class User(db.Model):
     last_name = db.Column(db.String(30), nullable=False)
 
     @classmethod
-    def register(cls, username, pwd):
-        """Register user w/hashed password & return user."""
+    def register(cls, username, pwd, first_name, last_name, email):
+        """Register user with hashed password & return user."""
+        
         # this one does not work at all. Returns a 'TypeError: initializer for ctype 'char' must be a bytes of length 1, not str'
         hashed = bcrypt.generate_password_hash(pwd)
 
@@ -47,8 +48,12 @@ class User(db.Model):
         # turn bytestring into normal (unicode utf8) string
         hashed_utf8 = hashed.decode("utf8")
 
+        user = cls(username=username, password=hashed_utf8, first_name=first_name, last_name=last_name, email=email)
+
+        db.session.add(user)
+
         # return instance of user w/username and hashed pwd
-        return cls(username=username, password=hashed_utf8)
+        return user
 
     @classmethod
     def authenticate(cls, username, pwd):
@@ -58,8 +63,20 @@ class User(db.Model):
         """
 
         u = User.query.filter_by(username=username).first()
+        
+        hashed = bcrypt.generate_password_hash(f'b{pwd}')
+        hashed_utf8 = hashed.decode("utf8")
 
-        if u and bcrypt.check_password_hash(u.password, pwd):
+        print('******************************')
+        print(pwd)
+        print(hashed)
+        print(hashed_utf8)
+        print(bcrypt.check_password_hash(hashed_utf8, f'b{pwd}'))
+        # above returns True
+        # print(bcrypt.check_password_hash(f'b{pwd}', hashed_utf8))
+        print('******************************')
+
+        if u and bcrypt.check_password_hash(u.password, f'b{pwd}'):
             # return user instance
             return u
         else:
