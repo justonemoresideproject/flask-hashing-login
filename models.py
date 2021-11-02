@@ -81,6 +81,8 @@ class User(db.Model):
             # return user instance
             return u
         else if u and bcrypt.check_password_hash(u.password, pwd):
+            return u
+        else:
             return False
 
 # Create a Feedback model for SQLAlchemy. Put this in a models.py file.
