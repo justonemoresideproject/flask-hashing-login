@@ -14,8 +14,8 @@
         <div class="navbar navbar-light bg-primary">
             <div class="navbar-container">
                 <span class="navbar-brand">
-                    {% if session['user_id'] %}
-                        <form action="/logout" methods='POST'>
+                    {% if session['username'] %}
+                        <form action="/logout">
                             <button class="btn btn-outline-dark">Logout</button>
                         </form>
                     {% else %} 
